@@ -1,0 +1,34 @@
+name: Windows exe olustur
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: PyInstaller kur
+        run: pip install pyinstaller
+
+      - name: exe olustur
+        run: >
+          pyinstaller --onefile --windowed
+          --name "Karlilik-Takibi"
+          --add-data "karlilik_core.py;."
+          karlilik_gui.py
+
+      - name: Ciktiyi yukle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Karlilik-Takibi-Windows
+          path: dist/Karlilik-Takibi.exe
